@@ -4,7 +4,7 @@
     RootModule = 'IISConfigDSC.psm1'
     
     # Version number of this module.
-    ModuleVersion = '0.1.0'
+    ModuleVersion = '1.0.0'
     
     # ID used to uniquely identify this module
     GUID = '75e78a13-1bdf-420c-9d86-68525b9ef62e'
@@ -32,8 +32,8 @@
     
     # DSC resources to export from this module
     DscResourcesToExport = @(
-        'IISApplicationHost',
-        'IISMachineConfig',
+        'IISApplicationHost'
+        'IISMachineConfig'
         'RegistryForwardSlash'
     )
     
@@ -46,8 +46,8 @@
             Tags = @(
                 'PSModule'
                 'IIS'
-                'DSC',
-                'DesiredStateConfiguration',
+                'DSC'
+                'DesiredStateConfiguration'
                 'DSCResource'
             )
     

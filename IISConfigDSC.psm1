@@ -1,4 +1,18 @@
-﻿# ApplicationHost
+﻿#####################
+## ApplicationHost ##
+#####################
+
+<#
+.SYNOPSIS
+    Returns the current value of an applicationhost setting
+.PARAMETER PSPath
+    Configuration path. This path can be either an IIS configuration path in the format computer MACHINE/WEBROOT/APPHOST, or the IIS module path in the format IIS:\sites\Default Web Site.
+.PARAMETER Filter
+    IIS configuration section or an XPath query that returns a configuration element.
+.PARAMETER Name
+    Name of the property to get.
+#>
+
 function Get-IISApplicationHost {
     Param(
         [Parameter(Mandatory)][string]$PSPath,
@@ -21,20 +35,26 @@ function Get-IISApplicationHost {
         $get = $get.Value
     }
 
-    # Workaround to convert boolean output to string because test value is string
-    if ($get -eq $true) {
-        $get = 'True'
-    } elseif ($get -eq $false) {
-        $get = 'False'
-    }
-
     return @{
         PSPath = $PSPath
         Filter = $Filter
-        Name = $Name
-        Value = $get
+        Name   = $Name
+        Value  = $get
     }
 }
+
+<#
+.SYNOPSIS
+    Tests the current value of the applicationhost setting against the desired value and returns a boolean.
+.PARAMETER PSPath
+    Configuration path. This path can be either an IIS configuration path in the format computer MACHINE/WEBROOT/APPHOST, or the IIS module path in the format IIS:\sites\Default Web Site.
+.PARAMETER Filter
+    IIS configuration section or an XPath query that returns a configuration element.
+.PARAMETER Name
+    Name of the property to get.
+.PARAMETER Value
+    The desired value of the setting.
+#>
 
 function Test-IISApplicationHost {
     Param(
@@ -49,7 +69,7 @@ function Test-IISApplicationHost {
 
     $get = Get-IISApplicationHost -PSPath $PSPath -Filter $Filter -Name $Name
 
-    if ($get.Value -eq $value) {
+    if ($Value -eq $get.Value) {
         $test = $true
         Write-Verbose -Message "Property $Name at $Filter is in desired state"
     }
@@ -60,6 +80,19 @@ function Test-IISApplicationHost {
 
     return $test
 }
+
+<#
+.SYNOPSIS
+    Changes the applicationhost setting to the desired value.
+.PARAMETER PSPath
+    Configuration path. This path can be either an IIS configuration path in the format computer MACHINE/WEBROOT/APPHOST, or the IIS module path in the format IIS:\sites\Default Web Site.
+.PARAMETER Filter
+    IIS configuration section or an XPath query that returns a configuration element.
+.PARAMETER Name
+    Name of the property to get.
+.PARAMETER Value
+    The desired value of the setting.
+#>
 
 function Set-IISApplicationHost {
     Param(
@@ -72,16 +105,22 @@ function Set-IISApplicationHost {
         [Parameter()]$Value
     )
 
-    # Workaround to convert string boolean to boolean type
-    if ($Value -eq '$true') {
-        $Value = $true
-    } elseif ($Value -eq '$false') {
-        $Value = $false
-    }
-
     Write-Verbose -Message "Setting Property $Name at $Filter to value $Value"
     Set-WebConfigurationProperty -PSPath $PSPath -Filter $Filter -Name $Name -Value $Value
 }
+
+<#
+.SYNOPSIS
+    Class-based DSC resource to modify the IIS Applicationhost.config.
+.PARAMETER PSPath
+    Configuration path. This path can be either an IIS configuration path in the format computer MACHINE/WEBROOT/APPHOST, or the IIS module path in the format IIS:\sites\Default Web Site.
+.PARAMETER Filter
+    IIS configuration section or an XPath query that returns a configuration element.
+.PARAMETER Name
+    Name of the property to get.
+.PARAMETER Value
+    The desired value of the setting.
+#>
 
 [DscResource()]
 class IISApplicationHost {
@@ -116,7 +155,19 @@ class IISApplicationHost {
     }
 }
 
-# MachineConfig
+###################
+## MachineConfig ##
+###################
+
+<#
+.SYNOPSIS
+    Returns the current value of a setting in machine.config.
+.PARAMETER Section
+    Section in machine.config where the setting is located.
+.PARAMETER Property
+    Name of the property to get.
+#>
+
 function Get-MachineConfig {
     Param(
         [Parameter(Mandatory)][String]$Section,
@@ -133,6 +184,17 @@ function Get-MachineConfig {
         Value    = $get
     }
 }
+
+<#
+.SYNOPSIS
+    Tests the current value of the machine.config setting against the desired value and returns a boolean.
+.PARAMETER Section
+    Section in machine.config where the setting is located.
+.PARAMETER Property
+    Name of the property to get.
+.PARAMETER Value
+    Desired value of the setting.
+#>
 
 function Test-MachineConfig {
     Param(
@@ -156,6 +218,17 @@ function Test-MachineConfig {
     return $test
 }
 
+<#
+.SYNOPSIS
+    Changes the machine.config setting to the desired value.
+.PARAMETER Section
+    Section in machine.config where the setting is located.
+.PARAMETER Property
+    Name of the property to get.
+.PARAMETER Value
+    Desired value of the setting.
+#>
+
 function Set-MachineConfig {
     Param(
         [Parameter(Mandatory)][String]$Section,
@@ -171,6 +244,17 @@ function Set-MachineConfig {
     $MachineConfig.GetSection($Section).$Property = $Value
     $MachineConfig.Save()
 }
+
+<#
+.SYNOPSIS
+    Class-based DSC Resource to modify the IIS machine.config.
+.PARAMETER Section
+    Section in machine.config where the setting is located.
+.PARAMETER Property
+    Name of the property to get.
+.PARAMETER Value
+    Desired value of the setting.
+#>
 
 [DscResource()]
 class IISMachineConfig {
@@ -198,7 +282,19 @@ class IISMachineConfig {
     }
 }
 
-# RegistryForwardSlash
+##########################
+## RegistryForwardSlash ##
+##########################
+
+<#
+.SYNOPSIS
+    Returns the current value of a registry setting.
+.PARAMETER Key
+    Registry key where the setting is located.
+.PARAMETER ValueName
+    Name of the value to get.
+#>
+
 function Get-RegistryForwardSlash {
     Param(
         [Parameter(Mandatory)][string]$Key,
@@ -217,11 +313,22 @@ function Get-RegistryForwardSlash {
     }
     
     return @{
-        Key = $Key
+        Key       = $Key
         ValueName = $ValueName
         ValueData = $get
     }
 }
+
+<#
+.SYNOPSIS
+    Tests the current value of the registry setting against the desired value and returns a boolean.
+.PARAMETER Key
+    Registry key where the setting is located.
+.PARAMETER ValueName
+    Name of the value to get.
+.PARAMETER ValueData
+    Desired value of the setting.
+#>
 
 function Test-RegistryForwardSlash {
     Param(
@@ -246,6 +353,17 @@ function Test-RegistryForwardSlash {
     return $test
 }
 
+<#
+.SYNOPSIS
+    Changes the registry setting to the desired value.
+.PARAMETER Key
+    Registry key where the setting is located.
+.PARAMETER ValueName
+    Name of the value to get.
+.PARAMETER ValueData
+    Desired value of the setting.
+#>
+
 function Set-RegistryForwardSlash {
     Param(
         [Parameter(Mandatory)][string]$Key,
@@ -268,6 +386,17 @@ function Set-RegistryForwardSlash {
     Write-Verbose -Message "Setting $(Join-Path -Path $Key -ChildPath $ValueName) to $($ValueData)"
     $RegistryKey.SetValue($ValueName,$ValueData,$ValueType)
 }
+
+<#
+.SYNOPSIS
+    Class-based DSC resource to modify registry settings (supports forward slash).
+.PARAMETER Key
+    Registry key where the setting is located.
+.PARAMETER ValueName
+    Name of the value to get.
+.PARAMETER ValueData
+    Desired value of the setting.
+#>
 
 [DscResource()]
 class RegistryForwardSlash {

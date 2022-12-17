@@ -4,7 +4,7 @@
     RootModule = 'IISConfigDSC.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.0'
+    ModuleVersion = '1.0.1'
     
     # ID used to uniquely identify this module
     GUID = '75e78a13-1bdf-420c-9d86-68525b9ef62e'

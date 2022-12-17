@@ -52,10 +52,10 @@
             )
     
             # A URL to the license for this module.
-            # LicenseUri = ''
+            LicenseUri = 'https://github.com/Crombell95/IISConfigDSC/blob/master/LICENSE'
     
             # A URL to the main website for this project.
-            # ProjectUri = ''
+            ProjectUri = 'https://github.com/Crombell95/IISConfigDSC'
     
             # A URL to an icon representing this module.
             # IconUri = ''
